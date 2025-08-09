@@ -332,3 +332,7 @@ with col3:
         
     except Exception as e:
         print(e)
+
+st.markdown("***🔗 Project Links:***")
+st.markdown(f"*[View Kaggle Notebook](https://www.kaggle.com/code/kagstick/us-traffic-accidents-notebook)*")
+st.markdown(f"*[Kaggle Dataset: US Accidents (2016 - 2023)](https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents)*")
