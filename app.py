@@ -5,6 +5,7 @@ import pandas as pd
 import re
 import folium
 from streamlit_folium import st_folium
+import xgboost
 
 # Load the pre-trained models
 @st.cache_resource
@@ -13,9 +14,10 @@ def load_models():
     tfidf = joblib.load("tfidf.pkl")  # TFIDF Vectorizer
     pca = joblib.load("pca.pkl")      # Truncated SVD
     sc = joblib.load("sc.pkl")        # Standard Scaler
-    return clf, tfidf, pca, sc
+    le = joblib.load("le.pkl")        # Label Encoder
+    return clf, tfidf, pca, sc, le
 
-clf, tfidf, pca, sc = load_models()
+clf, tfidf, pca, sc, le = load_models()
 n_components = 1
 
 # -------------------------------
@@ -71,13 +73,13 @@ def preprocess_input(lat, lng, tmp, description, humidity, pressure, visibility,
         'Wind_Angle': 'float64',
         'Wind_Accident_Alignment': 'float64',
         'desc_svd_0': 'float64',
-        'desc_svd_1': 'float64',
-        'desc_svd_2': 'float64',
-        'desc_svd_3': 'float64',
-        'desc_svd_4': 'float64',
-        'desc_svd_5': 'float64',
-        'desc_svd_6': 'float64',
-        'desc_svd_7': 'float64',
+        # 'desc_svd_1': 'float64',
+        # 'desc_svd_2': 'float64',
+        # 'desc_svd_3': 'float64',
+        # 'desc_svd_4': 'float64',
+        # 'desc_svd_5': 'float64',
+        # 'desc_svd_6': 'float64',
+        # 'desc_svd_7': 'float64',
         'Is_Highway': 'int64',
         'Weather_Is_Fair': 'int64',
         'Weather_Is_Cloudy': 'int64',
@@ -313,7 +315,7 @@ with col3:
         )
         
         # Make Prediction
-        severity = clf.predict(X)[0]
+        severity = le.inverse_transform([clf.predict(X)[0]])[0] # Convert to original label
         severity_prob = clf.predict_proba(X)[0]
         
         # Display result with styling
@@ -328,5 +330,5 @@ with col3:
         </div>
         """, unsafe_allow_html=True)
         
-    except:
-        pass
+    except Exception as e:
+        print(e)
