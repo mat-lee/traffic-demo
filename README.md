@@ -95,4 +95,4 @@ Built on the **US Accidents (2016–2023)** dataset. See Kaggle: https://www.kag
 ---
 
 ## License
-MIT — see [LICENSE](LICENSE).
+MIT
